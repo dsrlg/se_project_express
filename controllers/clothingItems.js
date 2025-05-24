@@ -36,9 +36,9 @@ const updateItem = (req, res) =>{
 const deleteItem = (req, res) =>{
   const {itemId} = req.params;
   console.log(itemId);
-  clothingItem.findByIdAndDelete(itemId).orFail().then((item)=>
+  clothingItem.findByIdAndDelete(itemId).orFail().then(()=>
     res.status(204).send({}))
-  .catch((err)=>{
+  .catch(()=>{
     res.status(500).send({message:"error from deleteItems"})
   }
   )
