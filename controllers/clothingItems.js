@@ -12,7 +12,7 @@ const createItem = (req, res) =>{
      if(err.name === "ValidationError"){
     return res.status(400).send({message: err.message});
   }
-      res.status(500).send({message: " Error from createItem" , err})
+    return  res.status(500).send({message: " Error from createItem" , err})
     })
 }
 
@@ -26,9 +26,9 @@ const getItems =(req, res) =>{
 const updateItem = (req, res) =>{
   const {itemId} = req.params;
   const {imageUrl} = req.body;
-  clothingItem.findByIdUpdate(itemId, {$set:{imageUrl}}).orFail().then((item)=>
+  clothingItem.findByIdAndUpdate(itemId, {$set:{imageUrl}}).orFail().then((item)=>
     res.status(200).send({data:item}))
-  .catch((err)=>{
+  .catch(()=>{
     res.status(500).send({message:"error from updateItems"})
   })
 }
@@ -36,7 +36,7 @@ const updateItem = (req, res) =>{
 const deleteItem = (req, res) =>{
   const {itemId} = req.params;
   console.log(itemId);
-  clothingItem.findByIdAndDelete(itemId.orFail()).then((item)=>
+  clothingItem.findByIdAndDelete(itemId).orFail().then((item)=>
     res.status(204).send({}))
   .catch((err)=>{
     res.status(500).send({message:"error from deleteItems"})
