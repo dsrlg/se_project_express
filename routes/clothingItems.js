@@ -4,8 +4,8 @@ const {createItem,getItems,updateItem,deleteItem}=require('../controllers/clothi
 
 router.post('/', createItem)
 router.get('/', getItems)
-router.put('/:itemId', updateItem)
-router.delete('/:itemId', deleteItem)
+router.put('/:itemId/likes', updateItem)
+router.delete('/:itemId/likes', deleteItem)
 
 
 module.exports = router;
