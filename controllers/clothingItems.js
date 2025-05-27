@@ -45,7 +45,7 @@ const itemLike = (req, res) =>{
 const deleteItem = (req, res) =>{
   const {itemId} = req.params;
   clothingItem.findByIdAndDelete(itemId).orFail().then(()=>
-    res.status(CODES.SUCCESS).send({itemId:itemId}))
+    res.status(CODES.SUCCESS).send({itemId}))
   .catch((err)=>{
      if (err.name === "CastError") {
              res.status(CODES.BAD_REQUEST).send({ message: "Invalid item ID" });
