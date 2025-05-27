@@ -1,5 +1,6 @@
 const User = require('../models/user')
 const CODES = require('../utils/codes')
+
 const getUsers = (req, res) =>{
   User.find({})
 .then((users)=>{

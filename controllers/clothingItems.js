@@ -6,7 +6,7 @@ const CODES = require('../utils/codes')
 const createItem = (req, res) =>{
 
   const {name, weather, imageUrl} = req.body;
-  let owner = req.user._id;
+  const owner = req.user._id;
   clothingItem.create({name , weather, imageUrl,owner})
   .then((item)=>{
     res.status(CODES.SUCCESS).send({data : item});
@@ -21,7 +21,7 @@ const createItem = (req, res) =>{
 
 const getItems =(req, res) =>{
   clothingItem.find({}).then((items)=> res.status(200).send(items))
-  .catch((err)=>{
+  .catch(()=>{
     res.status(CODES.INTERNAL_SERVER).send({message: "An error has occurred on the server"})
   })
 }
@@ -61,14 +61,14 @@ const deleteItemLike = (req, res) =>{
   clothingItem.findByIdAndDelete(itemId,
     { $pull: { likes: req.user._id } }, // remove user ID from likes array
     { new: true },).orFail().then(()=>
-    res.status(CODES.SUCCESS).send({itemId:itemId}))
+    res.status(CODES.SUCCESS).send({itemId}))
   .catch((err)=>{
      if (err.name === "CastError") {
-      return       res.status(CODES.BAD_REQUEST).send({ message: "Invalid item ID" });
+             res.status(CODES.BAD_REQUEST).send({ message: "Invalid item ID" });
       } else if (err.name === "DocumentNotFoundError") {
-      return  res.status(CODES.NOT_FOUND).send({ message: "Item not found" });
-      }
-      return res.status(CODES.INTERNAL_SERVER).send({message:"An error has occurred on the server"})
+        res.status(CODES.NOT_FOUND).send({ message: "Item not found" });
+      } else
+       res.status(CODES.INTERNAL_SERVER).send({message:"An error has occurred on the server"})
   }
   )
 }
