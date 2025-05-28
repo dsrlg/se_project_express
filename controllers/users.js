@@ -6,8 +6,8 @@ const getUsers = (req, res) => {
     .then((users) => {
       res.status(201).send(users);
     })
-    .catch((err) => {
-      return res
+    .catch(() => {
+       res
         .status(CODES.INTERNAL_SERVER)
         .send({ message: "An error has occurred on the server" });
     });
