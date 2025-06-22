@@ -1,24 +1,51 @@
 const User = require("../models/user");
 const CODES = require("../utils/codes");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../utils/config");
+const createUser = (req, res, next) => {
+  const { name, avatar, email, password } = req.body;
 
-const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => {
-      res.status(201).send(users);
+  if (!email || !password) {
+    return res
+      .status(CODES.BAD_REQUEST)
+      .send({ message: "The email and password fields are requried" });
+  }
+
+  bcrypt
+    .hash(password, 10)
+    .then((hash) => User.create({ name, avatar, email, password: hash }))
+    .then((user) => {
+      const userObj = user.toObject();
+      delete userObj.password;
+      return res.status(CODES.CREATED).send(userObj);
     })
-    .catch(() => {
-       res
-        .status(CODES.INTERNAL_SERVER)
-        .send({ message: "An error has occurred on the server" });
+    .catch((err) => {
+      console.error(err);
+      if (err.code === 11000) {
+        return res
+          .status(CODES.CONFLICT)
+          .send({ message: "Email already exists" });
+      }
+      if (err.name === "ValidationError") {
+        return res.status(CODES.BAD_REQUEST).send({ message: "Invalid input" });
+      }
+      return res.status(CODES.INTERNAL_SERVER);
     });
 };
 
-const createUsers = (req, res) => {
+const updateUser = (req, res) => {
   const { name, avatar } = req.body;
 
-  User.create({ name, avatar })
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, avatar },
+    { new: true, runValidators: true }
+  )
+
+    .orFail()
     .then((user) => {
-      res.status(201).send(user);
+      res.status(CODES.SUCCESS).send(user);
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
@@ -30,9 +57,9 @@ const createUsers = (req, res) => {
     });
 };
 
-const getUser = (req, res) => {
-  const { userId } = req.params;
-  User.findById(userId)
+const getCurrentUser = (req, res) => {
+  const { _id } = req.user; // Assuming req.user is set by auth middleware
+  User.findById(_id)
     .orFail()
     .then((user) => {
       res.status(200).send(user);
@@ -50,4 +77,30 @@ const getUser = (req, res) => {
         .send({ message: "An error has occurred on the server" });
     });
 };
-module.exports = { getUsers, createUsers, getUser };
+
+const loginUser = (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res
+      .status(CODES.BAD_REQUEST)
+      .send({ message: "Email and password are required" });
+  }
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+        expiresIn: "7d",
+      });
+      res.status(CODES.SUCCESS).send({ token });
+    })
+    .catch((err) => {
+      console.error(err);
+      if (err.message === "Incorrect email or password") {
+        return res
+          .status(CODES.UNAUTHORIZED)
+          .send({ message: "Incorrect email or password" });
+      }
+      return res.status(CODES.UNAUTHORIZED).send({ message: err.message });
+    });
+};
+module.exports = { updateUser, createUser, getCurrentUser, loginUser };
