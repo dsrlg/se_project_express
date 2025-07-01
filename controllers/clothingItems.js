@@ -55,10 +55,20 @@ const itemLike = (req, res) => {
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
   clothingItem
-    .findByIdAndDelete(itemId)
+    .findById(itemId)
     .orFail()
-    .then(() => res.status(CODES.SUCCESS).send({ itemId }))
+    .then((item) => {
+      if (String(item.owner) !== req.user._id) {
+        return res
+          .status(CODES.FORBIDDEN)
+          .send({ message: "You do not have permission to delete this item" });
+      }
+      return item.deleteOne().then(() => {
+        res.status(CODES.SUCCESS).send({ message: "Item deleted successfully" });
+      });
+    })
     .catch((err) => {
+      console.error(err);
       if (err.name === "CastError") {
         res.status(CODES.BAD_REQUEST).send({ message: "Invalid item ID" });
       } else if (err.name === "DocumentNotFoundError") {
@@ -72,10 +82,8 @@ const deleteItem = (req, res) => {
 const deleteItemLike = (req, res) => {
   const { itemId } = req.params;
   clothingItem
-    .findByIdAndDelete(
-      itemId,
-      { $pull: { likes: req.user._id } }, // remove user ID from likes array
-      { new: true }
+    .findById(
+      itemId
     )
     .orFail()
     .then(() => res.status(CODES.SUCCESS).send({ itemId }))

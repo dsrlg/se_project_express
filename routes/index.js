@@ -4,6 +4,7 @@ const clothingItem = require("./clothingItems");
 const userRouter = require("./users");
 
 const { loginUser, createUser } = require("../controllers/users");
+
 router.post("/signin", loginUser);
 router.post("/signup", createUser);
 router.use("/users", userRouter);

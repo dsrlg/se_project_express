@@ -13,19 +13,19 @@ mongoose
     console.log("Connected to DB");
   })
   .catch(console.error);
-app.use((req, res, next) => {
 
-  next();
-});
 const routes = require("./routes");
 
 app.use(express.json());
 
 
-app.use(cors());
 
 
 app.use(routes);
+
+app.use(cors());
+
+
 app.listen(PORT, () => {
   console.log("Starting");
 });
