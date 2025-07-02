@@ -17,7 +17,6 @@ const createUser = (req, res) => {
     .hash(password, 10)
     .then((hash) => User.create({ name, avatar, email, password: hash }))
     .then((user) => {
-      console.log("User created successfully:", user);
       const userObj = user.toObject();
       delete userObj.password;
       res.status(CODES.SUCCESS).send(userObj);
@@ -72,7 +71,6 @@ const getCurrentUser = (req, res) => {
       res.status(200).send(user);
     })
     .catch((err) => {
-      console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(CODES.NOT_FOUND).send({ message: err.message });
       }

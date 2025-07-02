@@ -68,7 +68,6 @@ const deleteItem = (req, res) => {
       });
     })
     .catch((err) => {
-      console.error(err);
       if (err.name === "CastError") {
         res.status(CODES.BAD_REQUEST).send({ message: "Invalid item ID" });
       } else if (err.name === "DocumentNotFoundError") {
@@ -82,9 +81,11 @@ const deleteItem = (req, res) => {
 const deleteItemLike = (req, res) => {
   const { itemId } = req.params;
   clothingItem
-    .findById(
-      itemId
-    )
+    .findByIdAndUpdate(
+  itemId,
+  { $pull: { likes: req.user._id } },
+  { new: true }
+)
     .orFail()
     .then(() => res.status(CODES.SUCCESS).send({ itemId }))
     .catch((err) => {
