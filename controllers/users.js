@@ -2,11 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const CODES = require("../utils/codes");
-const crypto = require('crypto'); // importing the crypto module
-
-const randomString = crypto
-  .randomBytes(16) // generating a random sequence of 16 bytes (128 bits)
-  .toString('hex'); // converting it into a string
+const { JWT_SECRET } = require("../utils/config");
 
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
@@ -97,7 +93,7 @@ const loginUser = (req, res) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, randomString, {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
       res.status(CODES.SUCCESS).send({ token });

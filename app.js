@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const app = express();
+require('dotenv').config();
 const { PORT = 3001 } = process.env;
 const errorHandler = require('./middlewares/errorHandler');
 const {errors} = require('celebrate');
