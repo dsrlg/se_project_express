@@ -10,9 +10,6 @@ This is a weather information website
 
 `npm run dev` — to launch the server with the hot reload feature
 
-### Testing
-
-Before committing your code, make sure you edit the file `sprint.txt` in the root folder. The file `sprint.txt` should contain the number of the sprint you're currently working on. For ex. 12
 
 ### Technologoies and techniques
 
@@ -27,10 +24,7 @@ Building a REST API
 A REST API is like a menu system.
 That helps how to place an order (HTTP methods like GET, POST, PUT, DELETE)
 
-GET /menu → "Show me all available"
-POST /orders → "I want to place a new order"
-PUT /orders/123 → "I want to modify order #123"
-DELETE /orders/123 → "Cancel order #123"
+
 
 Databases
 A database is like storage system. It's where you:
