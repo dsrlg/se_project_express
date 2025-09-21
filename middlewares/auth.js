@@ -15,7 +15,11 @@ const authMiddleware = (req, res, next) => {
     req.user = payload;
     return next();
   } catch (err) {
-    return res.status( CODES.UNAUTHORIZED).send({message:"Authorization required"});
+    const error = new Error('Authorization required');
+    error.statusCode = CODES.UNAUTHORIZED;
+
+    next(error);
+    //return res.status( CODES.UNAUTHORIZED).send({message:"Authorization required"});
   }
 };
 
