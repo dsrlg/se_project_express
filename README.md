@@ -9,12 +9,7 @@ This is a weather information website
 `npm run start` — to launch the server
 
 `npm run dev` — to launch the server with the hot reload feature
-## Api details
-Domain Names - 
-api.twtwr.crabdance.com
-www.twtwr.crabdance.com;
-twtwr.crabdance.com;
-Front end repo. https://github.com/dsrlg/se_project_express 
+
 
 ### Technologoies and techniques
 
@@ -38,3 +33,12 @@ Store data safely,Keep track of what you have,Organize everything so you can fin
 
 Error handling
 Error handling is like having a good crisis management plan, that helps track any issues unexpected errors customer might run into and and to handle them
+
+
+
+## Api details
+Domain Names - 
+    api.twtwr.crabdance.com
+    www.twtwr.crabdance.com
+    twtwr.crabdance.com
+Front end repo. https://github.com/dsrlg/se_project_express
