@@ -8,6 +8,7 @@ const BadRequestError = require('../errors/bad-request-err');
 const InternalServerError = require('../errors/internal-server-error');
 const UnauthorizedError = require('../errors/auth-error');
 const ConflictError = require('../errors/conflict-error');
+
 const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
 
@@ -27,8 +28,8 @@ const createUser = (req, res, next) => {
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictError("Email already exists"));
-        //return res.status(CODES.CONFLICT)
-        //.send({ message: "Email already exists" });
+        // return res.status(CODES.CONFLICT)
+        // .send({ message: "Email already exists" });
       }
       if (err.name === "ValidationError") {
         next(new BadRequestError("Invalid input"));

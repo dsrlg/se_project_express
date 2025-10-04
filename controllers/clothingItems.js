@@ -4,6 +4,9 @@ const NotFoundError = require("../errors/not-found-error");
 const BadRequestError = require("../errors/bad-request-err");
 const InternalServerError = require("../errors/internal-server-error");
 
+const ForbiddenError = require("../errors/forbidden-error");
+
+
 const createItem = (req, res, next) => {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
@@ -56,9 +59,7 @@ const deleteItem = (req, res, next) => {
     .orFail()
     .then((item) => {
       if (String(item.owner) !== req.user._id) {
-        return res
-          .status(CODES.FORBIDDEN)
-          .send({ message: "You do not have permission to delete this item" });
+        next(new ForbiddenError("You do not have permission to delete this item"));
       }
       return item.deleteOne().then(() => {
         res
