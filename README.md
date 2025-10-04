@@ -41,4 +41,4 @@ Domain Names -
     api.twtwr.crabdance.com
     www.twtwr.crabdance.com
     twtwr.crabdance.com
-Front end repo. https://github.com/dsrlg/se_project_express
+Front end repo: https://github.com/dsrlg/se_project_react
